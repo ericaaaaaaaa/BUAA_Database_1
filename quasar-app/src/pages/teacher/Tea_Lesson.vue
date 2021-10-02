@@ -1,12 +1,144 @@
 <template>
-  <q-page class="flex flex-center">
-    <h5 class="absolute-top-left q-pa-lg"> 教师--课程 </h5>
-  </q-page>
+<q-page class="">
+  <div class="q-pa-sm bg-grey-3">
+    <h5 align = "center"><b>教师课程列表</b></h5> 
+  </div>
+  <div class="col q-pa-sm bg-white">
+    <q-toolbar class="text-primary">
+      <q-toolbar-title>
+        课程添加
+      </q-toolbar-title>
+    </q-toolbar>
+    <q-form
+
+      @submit="onSubmit"
+      @reset="onReset"
+      class="q-gutter-md"
+    >
+      <q-input
+        filled
+        v-model="newClass"
+        label="新添课程名"
+        hint="课程名称"
+      />
+
+      <q-input
+        filled
+        type="number"
+        v-model="newSum"
+        label="课程容量"
+        hint="课程最大容量"
+        lazy-rules
+        :rules="[
+          (val => (val = '' || (val >= 0 && val <= 200))) || '课程容量需小于200'
+        ]"
+      />
+      <div>
+        <q-btn label="提交" type="submit" color="primary" @click="addClass"/>
+        <q-btn label="重置" type="reset" color="primary" flat class="q-ml-sm" />
+      </div>
+    </q-form>
+  </div>
+  <div>
+    <q-list 
+      class="bg-white"
+      separator
+      bordered>
+      <q-item 
+        v-for = "(task, index) in tasks"
+       :key="task.title"
+       @click="task.done = !task.done"
+       clickable
+        v-ripple>
+        <q-item-section avatar>
+          <q-checkbox 
+            v-model="task.done"
+            class="no-pointer-events"
+            color="primary" />
+        </q-item-section>
+        <q-item-section>
+          <q-item-label>{{task.title}}</q-item-label>
+          <q-item-label caption> 课程容量：{{task.sum}} </q-item-label>
+        </q-item-section>
+        <q-item-section
+          v-if="task.done"
+          side>
+          <q-btn 
+            @click.stop ="deleteTask(index)"
+            flat round dense color="primary"
+            icon="delete" />
+        </q-item-section>
+      </q-item>
+    </q-list>
+  </div>
+</q-page>  
 </template>
 
-<script>
-import { defineComponent } from 'vue';
 
-export default defineComponent({
-})
+
+<script>
+
+export default {
+  data () {
+    return {
+      newClass: '',
+      newSum: '',
+      tasks: [
+        {
+          title: '信息学',
+          done: false,
+          sum: 100
+        },
+        {
+          title: '社会学',
+          done: false,
+          sum: 20
+        },
+        {
+          title: '心理学',
+          done: false,
+          sum: 50
+        }
+      ]
+    }
+  },
+  methods: {
+    deleteTask(index) {
+      this.$q.dialog({
+        title: '确认',
+        message: '是否删除该课程',
+        cancel: true,
+        persistent: true
+      }).onOk(() => {
+        this.tasks.splice(index, 1)
+        this.$q.notify('课程已经删除！')
+      })
+    },
+    addClass() {
+      this.tasks.push({
+        title: this.newClass,
+        done: false,
+        sum: this.newSum
+      })
+      this.newClass = ''
+      this.newSum = ''
+    },
+    onSubmit () {
+      this.$q.notify({
+        color: 'green-4',
+        textColor: 'white',
+        icon: 'cloud_done',
+        message: '已添加课程'
+      })
+    },
+
+    onReset () {
+      this.newClass = null
+      this.newSum = null
+    }
+  }
+  
+}
+
 </script>
+
