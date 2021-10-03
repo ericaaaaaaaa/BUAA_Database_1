@@ -1,12 +1,237 @@
 <template>
-  <q-page class="flex flex-center">
-    <h5 class="absolute-top-left q-pa-lg"> 学生--课程 </h5>
+  <q-page class="">
+    <div class="q-pa-sm bg-grey-3">
+      <h5 align = "center"><b>学生课程列表</b></h5> 
+    </div>
+    <div>
+      <q-tabs
+        v-model="tab"
+        dense
+        class="bg-white text-blue shadow-2"
+        inline-label
+        align="left"
+      >
+        <q-tab name="selected_course" icon="check_box" label="已选课程"></q-tab>
+        <q-tab name="unselected_course" icon="add_box" label="未选课程"></q-tab>
+      </q-tabs>
+      <q-separator />
+      <q-tab-panels v-model="tab" animated>
+        <q-tab-panel name="selected_course">
+          <div>
+            <q-table
+              class="my-sticky-header-table"
+              :rows="rows_selected"
+              :columns="columns"
+              row-key="name"
+              :filter="filter"
+              :loading="loading"
+              v-model:selected="selected"
+              selection="multiple"
+            >
+            <template v-slot:top-left>
+              <q-input bg-color="white" filled borderless dense debounce="300" v-model="filter" placeholder="查询课程">
+                <template v-slot:append>
+                  <q-icon name="search" />
+                </template>
+              </q-input>
+            </template>
+            <template v-slot:top-right>
+                <q-btn
+                  color="white"
+                  text-color="black"
+                  icon-right="delete"
+                  no-caps
+                  @click="deleteSelectedCourse"
+                />
+              </template>
+            </q-table>
+          </div>
+        </q-tab-panel>
+        <q-tab-panel name="unselected_course">
+          <div>
+            <q-table
+              class="my-sticky-header-table"
+              :rows="rows_unselected"
+              :columns="columns"
+              row-key="name"
+              :filter="filter_1"
+              :loading="loading_1"
+              v-model:selected="unselected"
+              selection="multiple"
+            >
+            <template v-slot:top-left>
+              <q-input bg-color="white" filled borderless dense debounce="300" v-model="filter_1" placeholder="查询课程">
+                <template v-slot:append>
+                  <q-icon name="search" />
+                </template>
+              </q-input>
+            </template>
+            <template v-slot:top-right>
+                <q-btn
+                  color="white"
+                  text-color="black"
+                  icon-right="add"
+                  no-caps
+                  @click="addSelectedCourse"
+                />
+              </template>
+            </q-table>
+          </div>
+        </q-tab-panel>
+      </q-tab-panels>
+    </div>
   </q-page>
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { ref } from 'vue'
 
-export default defineComponent({
+const columns = [
+  {
+    name: 'name',
+    required: true,
+    label: '课程名称',
+    align: 'left',
+    field: row => row.name,
+    format: val => `${val}`,
+    sortable: true
+  },
+  { name: 'id', align: 'center', label: '课程号', field: 'id', sortable: true },
+  { name: 'capacity', label: '课程容量', field: 'capacity', sortable: true },
+  { name: 'teacher', label: '授课教师', field: 'teacher', sortable: true}
+]
+
+var rows_selected = [
+  {
+    name: '离散数学',
+    capacity: 57,
+    id: 1,
+    teacher: '马殿富'
+  },
+  {
+    name: '基物实验',
+    capacity: 1000,
+    id: 4,
+    teacher: '王文玲'
+  },
+  {
+    name: '操作系统',
+    capacity: 75,
+    id: 2,
+    teacher: '王雷'
+  },
+  {
+    name: '形式语言与自动机',
+    capacity: 50,
+    id: 6,
+    teacher: '胡春明'
+  },
+  {
+    name: '高等代数',
+    capacity: 85,
+    id: 7,
+    teacher: '孙晓伟'
+  }
+]
+
+var rows_unselected = [
+  {
+    name: '数据结构',
+    capacity: 57,
+    id: 3,
+    teacher: '李波'
+  },
+  {
+    name: '计算机组成',
+    capacity: 63,
+    id: 5,
+    teacher: '高小鹏'
+  }
+]
+
+export default({
+  data () {
+    const loading = ref(false)
+    const filter = ref('')
+    const loading_1 = ref(false)
+    const filter_1 = ref('')
+
+    return {
+      filter,
+      loading,
+      filter_1,
+      loading_1,
+      selected: ref([]),
+      unselected: ref([]),
+      columns,
+      rows_selected,
+      rows_unselected,
+      tab: ref('selected_course'),
+    }
+  },
+
+  methods:{
+    deleteSelectedCourse(){
+      this.$q.dialog({
+        title: '确认',
+        message: '是否删除该课程',
+        cancel: true,
+        persistent: true
+      }).onOk(() => {
+        let self = this;
+        this.selected.filter(function(item){
+          // self.rows_unselected.push(self.rows_selected[0]);
+          self.rows_unselected.push(self.rows_selected[self.rows_selected.indexOf(item)]);
+          self.rows_selected.splice(self.rows_selected.indexOf(item), 1);
+          return item;
+        });
+        this.selected = [];
+        this.$q.notify('课程已经删除！')
+      })
+      
+    },
+    addSelectedCourse(){
+      this.$q.dialog({
+        title: '确认',
+        message: '是否添加该课程',
+        cancel: true,
+        persistent: true
+      }).onOk(() => {
+        let self = this;
+        this.unselected.filter(function(item){
+          // self.rows_selected.push(self.rows_unselected[0]);
+          self.rows_selected.push(self.rows_unselected[self.rows_unselected.indexOf(item)]);
+          self.rows_unselected.splice(self.rows_unselected.indexOf(item), 1);
+          return item;
+        });
+        this.unselected = [];
+        this.$q.notify('课程已经添加！')
+      })
+      
+    }
+  }
 })
 </script>
+
+<style lang="sass">
+.my-sticky-header-table
+  /* height or max-height is important */
+  max-height: 700px
+
+  .q-table__top,
+  .q-table__bottom,
+  thead tr:first-child th
+    /* bg color is important for th; just specify one */
+    background-color: #D6EAF8
+
+  thead tr th
+    position: sticky
+    z-index: 1
+  thead tr:first-child th
+    top: 0
+
+  /* this is when the loading indicator appears */
+  &.q-table--loading thead tr:last-child th
+    /* height of all previous header rows */
+    top: 48px
+</style>
