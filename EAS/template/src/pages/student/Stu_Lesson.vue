@@ -103,60 +103,62 @@ const columns = [
   { name: 'teacher', label: '授课教师', field: 'teacher', sortable: true}
 ]
 
-var rows_selected = [
-  {
-    name: '离散数学',
-    capacity: 57,
-    id: 1,
-    teacher: '马殿富'
-  },
-  {
-    name: '基物实验',
-    capacity: 1000,
-    id: 4,
-    teacher: '王文玲'
-  },
-  {
-    name: '操作系统',
-    capacity: 75,
-    id: 2,
-    teacher: '王雷'
-  },
-  {
-    name: '形式语言与自动机',
-    capacity: 50,
-    id: 6,
-    teacher: '胡春明'
-  },
-  {
-    name: '高等代数',
-    capacity: 85,
-    id: 7,
-    teacher: '孙晓伟'
-  }
-]
+// var rows_selected = [
+//   {
+//     name: '离散数学',
+//     capacity: 57,
+//     id: 1,
+//     teacher: '马殿富'
+//   },
+//   {
+//     name: '基物实验',
+//     capacity: 1000,
+//     id: 4,
+//     teacher: '王文玲'
+//   },
+//   {
+//     name: '操作系统',
+//     capacity: 75,
+//     id: 2,
+//     teacher: '王雷'
+//   },
+//   {
+//     name: '形式语言与自动机',
+//     capacity: 50,
+//     id: 6,
+//     teacher: '胡春明'
+//   },
+//   {
+//     name: '高等代数',
+//     capacity: 85,
+//     id: 7,
+//     teacher: '孙晓伟'
+//   }
+// ]
 
-var rows_unselected = [
-  {
-    name: '数据结构',
-    capacity: 57,
-    id: 3,
-    teacher: '李波'
-  },
-  {
-    name: '计算机组成',
-    capacity: 63,
-    id: 5,
-    teacher: '高小鹏'
-  }
-]
+// var rows_unselected = [
+//   {
+//     name: '数据结构',
+//     capacity: 57,
+//     id: 3,
+//     teacher: '李波'
+//   },
+//   {
+//     name: '计算机组成',
+//     capacity: 63,
+//     id: 5,
+//     teacher: '高小鹏'
+//   }
+// ]
 
 export default({
   data () {
     const loading = ref(false)
     const filter = ref('')
     const loading_1 = ref(false)
-    const filter_1 = ref('')
+    const filter_1 = ref(''),
+    rows_selected = [],
+    rows_unselected = []
 
     return {
       filter,
