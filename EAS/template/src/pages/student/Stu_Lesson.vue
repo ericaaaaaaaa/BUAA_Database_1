@@ -11,8 +11,8 @@
         inline-label
         align="left"
       >
-        <q-tab name="selected_course" icon="check_box" label="已选课程"></q-tab>
-        <q-tab name="unselected_course" icon="add_box" label="未选课程"></q-tab>
+        <q-tab name="selected_course" icon="check_box" label="已选课程" @click="checkSelectedCourse"></q-tab>
+        <q-tab name="unselected_course" icon="add_box" label="未选课程" @click="checkUnselectedCourse"></q-tab>
       </q-tabs>
       <q-separator />
       <q-tab-panels v-model="tab" animated>
@@ -85,6 +85,8 @@
 
 <script>
 import { ref } from 'vue'
+import axios from 'axios'
+import VueAxios from 'vue-axios';
 
 const columns = [
   {
@@ -207,8 +209,49 @@ export default({
         this.unselected = [];
         this.$q.notify('课程已经添加！')
       })
-      
-    }
+    },
+    checkSelectedCourse(){
+      axios({
+        method: 'get',
+        url: 'http://localhost:8000/student/lesson/',
+        params: {
+            "userId": "2333",
+            "searchText": "",
+            "operation": "selected"
+        }
+      }).then(function (response) {
+          // handle success
+          this.rows_selected = response.data;
+          console.log(response);
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+        .then(function () {
+          // always executed
+        });
+    },
+    checkUnselectedCourse(){
+      axios.get('http://localhost:8000/student/lesson/', {
+        params: {
+            "userId": "2333",
+            "searchText": "",
+            "operation": "unselected"
+        }
+      }).then(function (response) {
+          // handle success
+          this.rows_unselected = response.data;
+          console.log(response);
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+        .then(function () {
+          // always executed
+        });
+    },
   }
 })
 </script>
