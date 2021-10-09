@@ -115,21 +115,34 @@ export default {
       })
     },
     addClass() {
-      this.tasks.push({
-        title: this.newClass,
-        done: false,
-        sum: this.newSum
-      })
-      this.newClass = ''
-      this.newSum = ''
+      if (this.newClass !== '' && this.newSum !== '') {
+        this.tasks.push({
+          title: this.newClass,
+          done: false,
+          sum: this.newSum
+        })
+        this.newClass = ''
+        this.newSum = ''
+      }
+      
     },
     onSubmit () {
-      this.$q.notify({
-        color: 'green-4',
-        textColor: 'white',
-        icon: 'cloud_done',
-        message: '已添加课程'
-      })
+      if (this.newClass !== '' && this.newSum !== '') {
+        this.$q.notify({
+          color: 'green-4',
+         textColor: 'white',
+          icon: 'cloud_done',
+          message: '已添加课程'
+        })
+      }
+      else {
+        this.$q.notify({
+          color: 'red-5',
+          textColor: 'white',
+          icon: 'warning',
+          message: '请填写课程相关信息'
+        })
+      }
     },
 
     onReset () {
