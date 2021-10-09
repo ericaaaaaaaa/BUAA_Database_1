@@ -28,5 +28,6 @@ urlpatterns = [
     url(r'student/login/', views.stuLogin),
     url(r'teacher/register/', views.teaRegister),
     url(r'teacher/login/', views.teaLogin),
-    url(r'student/lesson/', views.lesson)
+    url(r'student/lesson/', views.stuLesson),
+    url(r'teacher/lesson/', views.teaLesson)
 ]
