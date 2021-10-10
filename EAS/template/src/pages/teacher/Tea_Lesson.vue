@@ -77,6 +77,9 @@
 
 
 <script>
+import { ref } from 'vue'
+import axios from 'axios'
+import VueAxios from 'vue-axios';
 
 export default {
   data () {
@@ -110,9 +113,23 @@ export default {
         cancel: true,
         persistent: true
       }).onOk(() => {
-        this.tasks.splice(index, 1)
-        this.$q.notify('课程已经删除！')
+        this.$q.notify('将删除课程！')
       })
+      axios({
+        method: 'POST',
+        url:'http://localhost:8000/teacher/lesson/',
+        data:{
+          "userId": "",
+          "courseName": this.tasks.indexOf(index).title,
+          "operation": "delete"
+        }
+      })
+      .then(response => {
+        console.log(response)
+      }, error=> {
+        console.log('错误',error.message)
+      })
+      this.tasks.splice(index, 1)
     },
     addClass() {
       if (this.newClass !== '' && this.newSum !== '') {
@@ -121,6 +138,22 @@ export default {
           done: false,
           sum: this.newSum
         })
+      axios({
+        method: 'POST',
+        url:'http://localhost:8000/teacher/lesson/',
+        data:{
+          "userId": "",
+          "courseName": this.newClass,
+          "courseSum": this.newSum,
+          "operation": "add"
+        }
+      })
+      .then(response => {
+        console.log(response)
+      }, error=> {
+        console.log('错误',error.message)
+      })        
+
         this.newClass = ''
         this.newSum = ''
       }

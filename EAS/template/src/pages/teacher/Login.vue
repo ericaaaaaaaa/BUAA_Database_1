@@ -80,6 +80,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 
 export default {
   data () {
@@ -93,10 +94,29 @@ export default {
 
   methods :{
     onClick:function() {
-      if (this.teacherId == 12345) {
-        this.$router.push('/teacher/homepage');
-        // window.open('http://localhost:8080/#/teacher/homepage');
-      }
+      axios({
+        method: 'get',
+        url: 'http://localhost:8000/teacher/login/',
+        params: {
+            "teacherId": this.teacherId.toString,
+            "teacherPwd": this.teacherPwd
+        }
+      }).then(function (response) {
+          // handle success
+          this.$router.push('/teacher/homepage');
+          console.log(response);
+        })
+        .catch(function (error) {
+          // handle error
+          this.$q.notify({
+            type: 'negative',
+            message: '请输入正确的用户名 / 密码'
+          })
+          console.log(error);
+        })
+        .then(function () {
+          // always executed
+        });
     },
     back:function() {
       this.$router.push('/')
