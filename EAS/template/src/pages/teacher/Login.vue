@@ -94,9 +94,9 @@ export default {
 
   methods :{
     onClick:function() {
-      this.$router.push({
-            path: '/teacher/lesson/' + this.teacherId,
-          });
+      // this.$router.push({
+      //       path: '/teacher/lesson/' + this.teacherId,
+      //     });
       axios({
         method: 'GET',
         url: 'http://localhost:8000/teacher/login/',
