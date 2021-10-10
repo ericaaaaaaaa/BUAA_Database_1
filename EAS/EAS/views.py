@@ -293,7 +293,7 @@ def query(request):
         })
 
 
-def lesson(request):
+def stuLesson(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         operation = data['operation']
@@ -307,6 +307,66 @@ def lesson(request):
             search(request)
         elif request.GET['operation'] == "selected":
             query(request)
+
+
+def teaLesson(request):
+    if request.method == 'POST':
+        add(request)
+    elif request.method == 'GET':
+        teaQuery(request)
+
+
+def add(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        courseName = data['title']
+        capacity = data['sum']
+        sql = f'''
+                insert into course (courseName,teaId,capacity)
+                values("{courseName}", "{currUserId}", "{capacity}");
+                '''
+        cursor.execute(sql)
+        db.commit()
+        return JsonResponse({
+            "data": {},
+            "status": 0,
+            "statusInfo": {
+                "message": "",
+                "detail": ""
+            }
+        })
+
+
+def teaQuery(request):
+    if request.method == 'GET':
+        request.encoding = 'utf-8'
+        sql = f'''
+        select * from course where teaId="{currUserId}");
+        '''
+        if 'searchText' in request.GET:
+            sql = f'''
+            select * from course where courseName like "%{request.GET['searchText']}%" and teaId="{currUserId}");
+            '''
+        cursor.execute(sql)
+        db.commit()
+        results = cursor.fetchall()
+        courseTable = []
+        for each in results:
+            courseTable.append({
+                "id": each[0],
+                "name": each[1],
+                "capacity": each[3]
+            })
+        return JsonResponse({
+            "data": {
+                "courseTable": courseTable
+            },
+            "status": 0,
+            "statusInfo": {
+                "message": "",
+                "detail": ""
+            }
+        })
 
 
 def verify_token(request):

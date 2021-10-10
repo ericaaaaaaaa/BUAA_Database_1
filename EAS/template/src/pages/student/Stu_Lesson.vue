@@ -11,8 +11,8 @@
         inline-label
         align="left"
       >
-        <q-tab name="selected_course" icon="check_box" label="已选课程"></q-tab>
-        <q-tab name="unselected_course" icon="add_box" label="未选课程"></q-tab>
+        <q-tab name="selected_course" icon="check_box" label="已选课程" @click="checkSelectedCourse"></q-tab>
+        <q-tab name="unselected_course" icon="add_box" label="未选课程" @click="checkUnselectedCourse"></q-tab>
       </q-tabs>
       <q-separator />
       <q-tab-panels v-model="tab" animated>
@@ -85,6 +85,8 @@
 
 <script>
 import { ref } from 'vue'
+import axios from 'axios'
+import VueAxios from 'vue-axios';
 
 const columns = [
   {
@@ -101,60 +103,62 @@ const columns = [
   { name: 'teacher', label: '授课教师', field: 'teacher', sortable: true}
 ]
 
-var rows_selected = [
-  {
-    name: '离散数学',
-    capacity: 57,
-    id: 1,
-    teacher: '马殿富'
-  },
-  {
-    name: '基物实验',
-    capacity: 1000,
-    id: 4,
-    teacher: '王文玲'
-  },
-  {
-    name: '操作系统',
-    capacity: 75,
-    id: 2,
-    teacher: '王雷'
-  },
-  {
-    name: '形式语言与自动机',
-    capacity: 50,
-    id: 6,
-    teacher: '胡春明'
-  },
-  {
-    name: '高等代数',
-    capacity: 85,
-    id: 7,
-    teacher: '孙晓伟'
-  }
-]
+// var rows_selected = [
+//   {
+//     name: '离散数学',
+//     capacity: 57,
+//     id: 1,
+//     teacher: '马殿富'
+//   },
+//   {
+//     name: '基物实验',
+//     capacity: 1000,
+//     id: 4,
+//     teacher: '王文玲'
+//   },
+//   {
+//     name: '操作系统',
+//     capacity: 75,
+//     id: 2,
+//     teacher: '王雷'
+//   },
+//   {
+//     name: '形式语言与自动机',
+//     capacity: 50,
+//     id: 6,
+//     teacher: '胡春明'
+//   },
+//   {
+//     name: '高等代数',
+//     capacity: 85,
+//     id: 7,
+//     teacher: '孙晓伟'
+//   }
+// ]
 
-var rows_unselected = [
-  {
-    name: '数据结构',
-    capacity: 57,
-    id: 3,
-    teacher: '李波'
-  },
-  {
-    name: '计算机组成',
-    capacity: 63,
-    id: 5,
-    teacher: '高小鹏'
-  }
-]
+// var rows_unselected = [
+//   {
+//     name: '数据结构',
+//     capacity: 57,
+//     id: 3,
+//     teacher: '李波'
+//   },
+//   {
+//     name: '计算机组成',
+//     capacity: 63,
+//     id: 5,
+//     teacher: '高小鹏'
+//   }
+// ]
 
 export default({
   data () {
     const loading = ref(false)
     const filter = ref('')
     const loading_1 = ref(false)
-    const filter_1 = ref('')
+    const filter_1 = ref(''),
+    rows_selected = [],
+    rows_unselected = []
 
     return {
       filter,
@@ -207,8 +211,49 @@ export default({
         this.unselected = [];
         this.$q.notify('课程已经添加！')
       })
-      
-    }
+    },
+    checkSelectedCourse(){
+      axios({
+        method: 'get',
+        url: 'http://localhost:8000/student/lesson/',
+        params: {
+            "userId": "2333",
+            "searchText": "",
+            "operation": "selected"
+        }
+      }).then(function (response) {
+          // handle success
+          this.rows_selected = response.data;
+          console.log(response);
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+        .then(function () {
+          // always executed
+        });
+    },
+    checkUnselectedCourse(){
+      axios.get('http://localhost:8000/student/lesson/', {
+        params: {
+            "userId": "2333",
+            "searchText": "",
+            "operation": "unselected"
+        }
+      }).then(function (response) {
+          // handle success
+          this.rows_unselected = response.data;
+          console.log(response);
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+        .then(function () {
+          // always executed
+        });
+    },
   }
 })
 </script>
