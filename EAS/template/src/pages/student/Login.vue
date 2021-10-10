@@ -94,16 +94,26 @@ export default {
 
   methods :{
     onClick:function() {
+      // this.$router.push({
+      //       // path: '/student/homepage', 
+      //       path: '/student/lesson/12345',
+      //       // params: { studentId: this.studentId.toString }
+      //     });
+      // console.log('/student/homepage/' + this.studentId);
       axios({
-        method: 'get',
+        method: 'GET',
         url: 'http://localhost:8000/student/login/',
         params: {
-            "studentId": this.studentId.toString,
+            "studentId": this.studentId,
             "studentPwd": this.studentPwd
         }
       }).then(function (response) {
           // handle success
-          this.$router.push('/student/homepage');
+          // this.$router.push?('/student/homepage');
+          this.$router.push({
+            path: '/student/lesson/' + this.studentId, 
+            params: { studentId }
+          })
           console.log(response);
         })
         .catch(function (error) {

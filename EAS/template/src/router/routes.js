@@ -24,8 +24,8 @@ const routes = [
     path: '/',
     component: () => import('layouts/StuLayout.vue'),
     children: [
-      { path: 'student/homepage', component: () => import('src/pages/student/Stu_Homepage.vue') },
-      { path: 'student/lesson', component: () => import('src/pages/student/Stu_Lesson.vue') },
+      { name: 'studentHomepage', path: 'student/homepage/:studentId', component: () => import('src/pages/student/Stu_Homepage.vue') },
+      { path: 'student/lesson/:studentId', component: () => import('src/pages/student/Stu_Lesson.vue') },
       { path: 'student/exam', component: () => import('src/pages/student/Stu_Exam.vue') },
       { path: 'student/settings', component: () => import('src/pages/student/Stu_Settings.vue') },
     ]
@@ -35,8 +35,8 @@ const routes = [
     path: '/',
     component: () => import('layouts/TeaLayout.vue'),
     children: [
-      { path: 'teacher/homepage', component: () => import('src/pages/teacher/Tea_Homepage.vue') },
-      { path: 'teacher/lesson', component: () => import('src/pages/teacher/Tea_Lesson.vue') },
+      { path: 'teacher/homepage/:teacherId', component: () => import('src/pages/teacher/Tea_Homepage.vue') },
+      { path: 'teacher/lesson/:teacherId', component: () => import('src/pages/teacher/Tea_Lesson.vue') },
       { path: 'teacher/exam', component: () => import('src/pages/teacher/Tea_Exam.vue') },
       { path: 'teacher/settings', component: () => import('src/pages/teacher/Tea_Settings.vue') }
     ]

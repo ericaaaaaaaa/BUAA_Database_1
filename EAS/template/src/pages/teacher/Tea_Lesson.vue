@@ -83,6 +83,8 @@ import VueAxios from 'vue-axios';
 
 export default {
   data () {
+    var teacherId = this.$route.params.teacherId
+
     return {
       newClass: '',
       newSum: '',
@@ -102,7 +104,8 @@ export default {
           done: false,
           sum: 50
         }
-      ]
+      ],
+      teacherId
     }
   },
   methods: {
@@ -119,7 +122,7 @@ export default {
         method: 'POST',
         url:'http://localhost:8000/teacher/lesson/',
         data:{
-          "userId": "",
+          "userId": this.teacherId,
           "courseName": this.tasks.indexOf(index).title,
           "operation": "delete"
         }
@@ -142,7 +145,7 @@ export default {
         method: 'POST',
         url:'http://localhost:8000/teacher/lesson/',
         data:{
-          "userId": "",
+          "userId": this.teacherId,
           "courseName": this.newClass,
           "courseSum": this.newSum,
           "operation": "add"

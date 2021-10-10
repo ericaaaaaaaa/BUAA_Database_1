@@ -98,10 +98,10 @@ export default {
       //   // window.open('http://localhost:8080/#/student/homepage');
       // }
       axios({
-        method: 'post',
+        method: 'POST',
         url: 'http://localhost:8000/student/register/',
         params: {
-            "studentId": this.studentId.toString,
+            "studentId": this.studentId,
             "studentPwd": this.studentPwd
         }
       }).then(function (response) {

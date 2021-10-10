@@ -158,37 +158,38 @@ export default({
     const loading_1 = ref(false)
     const filter_1 = ref(''),
     rows_selected = [
-  {
-    name: '离散数学',
-    capacity: 57,
-    id: 1,
-    teacher: '马殿富'
-  },
-  {
-    name: '基物实验',
-    capacity: 1000,
-    id: 4,
-    teacher: '王文玲'
-  },
-  {
-    name: '操作系统',
-    capacity: 75,
-    id: 2,
-    teacher: '王雷'
-  },
-  {
-    name: '形式语言与自动机',
-    capacity: 50,
-    id: 6,
-    teacher: '胡春明'
-  },
-  {
-    name: '高等代数',
-    capacity: 85,
-    id: 7,
-    teacher: '孙晓伟'
-  }],
-    rows_unselected = []
+      {
+        name: '离散数学',
+        capacity: 57,
+        id: 1,
+        teacher: '马殿富'
+      },
+      {
+        name: '基物实验',
+        capacity: 1000,
+        id: 4,
+        teacher: '王文玲'
+      },
+      {
+        name: '操作系统',
+        capacity: 75,
+        id: 2,
+        teacher: '王雷'
+      },
+      {
+        name: '形式语言与自动机',
+        capacity: 50,
+        id: 6,
+        teacher: '胡春明'
+      },
+      {
+        name: '高等代数',
+        capacity: 85,
+        id: 7,
+        teacher: '孙晓伟'
+      }],
+    rows_unselected = [],
+    studentId = this.$route.params.studentId
 
     return {
       filter,
@@ -203,6 +204,8 @@ export default({
       rows_selected,
       rows_unselected,
       tab: ref('selected_course'),
+      // studentId: this.$route.params.studentId
+      studentId
     }
   },
 
@@ -212,22 +215,27 @@ export default({
 
   methods:{
     deleteSelectedCourse(){
+      // console.log(this.studentId);
+      var c_id = "";
       this.$q.dialog({
         title: '确认',
         message: '是否删除该课程',
         cancel: true,
         persistent: true
       }).onOk(() => {
-        let self = this;
         this.selected.filter(function(item){
           // self.rows_unselected.push(self.rows_selected[self.rows_selected.indexOf(item)]);
           // self.rows_selected.splice(self.rows_selected.indexOf(item), 1);
-          console.log("here comes...")
-          console.log(JSON.stringify(this.selected));
-          console.log("and its done");
-          axios.post('http://localhost:8000/student/lesson/', {
-            userId: "2333",
-            operation: "select"
+          c_id = item.id;
+        });
+          axios({
+            method: 'POST',
+            url: 'http://localhost:8000/student/lesson/',
+            params: {
+                "userId": this.studentId,
+                "courseId": c_id,
+                "operation": "delete"
+            }
           }).then(function (response) {
               // handle success
               this.rows_selected = response.data;
@@ -241,11 +249,13 @@ export default({
               // always executed
             });
           checkSelectedCourse();
+          checkUnselectedCourse();
           return item;
-        });
+        // });
         this.selected = [];
         this.$q.notify('课程已经删除！')
-      })
+      }
+      )
       
     },
     addSelectedCourse(){
@@ -255,24 +265,71 @@ export default({
         cancel: true,
         persistent: true
       }).onOk(() => {
-        let self = this;
+        var c_id = "";
         this.unselected.filter(function(item){
-          self.rows_selected.push(self.rows_unselected[self.rows_unselected.indexOf(item)]);
-          self.rows_unselected.splice(self.rows_unselected.indexOf(item), 1);
+          c_id = item.id;
+          // axios({
+          //   method: 'POST',
+          //   url: 'http://localhost:8000/student/lesson/',
+          //   params: {
+          //       "userId": this.studentId,
+          //       "courseId": item.id,
+          //       "operation": "select"
+          //   }
+          // }).then(function (response) {
+          //     // handle success
+          //     this.rows_selected = response.data;
+          //     console.log(response);
+          //   })
+          //   .catch(function (error) {
+          //     // handle error
+          //     console.log(error);
+          //   })
+          //   .then(function () {
+          //     // always executed
+          //   });
+          // // self.rows_selected.push(self.rows_unselected[self.rows_unselected.indexOf(item)]);
+          // // self.rows_unselected.splice(self.rows_unselected.indexOf(item), 1);
+          // checkSelectedCourse();
+          // checkUnselectedCourse();
           return item;
         });
+        axios({
+          method: "POST",
+          url: "http://localhost:8000/student/lesson/",
+          params: {
+            "userId": this.studentId,
+            "courseId": c_id,
+            "operation": "select"
+          }
+        }).then(function (response) {
+              // handle success
+              this.rows_selected = response.data;
+              console.log(response);
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            })
+            .then(function () {
+              // always executed
+            });
+          checkSelectedCourse();
+          checkUnselectedCourse();
         this.unselected = [];
         this.$q.notify('课程已经添加！')
       })
     },
     checkSelectedCourse(){
+      // console.log("hahaha")
+      // console.log(this.studentId);
       axios({
-        method: 'get',
+        method: 'GET',
         url: 'http://localhost:8000/student/lesson/',
         params: {
-            userId: "2333",
-            searchText: "",
-            operation: "selected"
+            "userId": this.studentId,
+            "searchText": "",
+            "operation": "selected"
         }
       }).then(function (response) {
           // handle success
@@ -288,11 +345,13 @@ export default({
         });
     },
     checkUnselectedCourse(){
-      axios.get('http://localhost:8000/student/lesson/', {
+      axios({
+        method: 'GET',
+        url: 'http://localhost:8000/student/lesson/',
         params: {
-            userId: "2333",
-            searchText: "",
-            operation: "unselected"
+            "userId": this.studentId,
+            "searchText": "",
+            "operation": "unselected"
         }
       }).then(function (response) {
           // handle success

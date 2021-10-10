@@ -94,16 +94,22 @@ export default {
 
   methods :{
     onClick:function() {
+      this.$router.push({
+            path: '/teacher/lesson/' + this.teacherId,
+          });
       axios({
-        method: 'get',
+        method: 'GET',
         url: 'http://localhost:8000/teacher/login/',
         params: {
-            "teacherId": this.teacherId.toString,
+            "teacherId": this.teacherId,
             "teacherPwd": this.teacherPwd
         }
       }).then(function (response) {
           // handle success
-          this.$router.push('/teacher/homepage');
+          // this.$router.push('/teacher/lesson/');
+          this.$router.push({
+            path: '/teacher/lesson/' + this.teacherId,
+          })
           console.log(response);
         })
         .catch(function (error) {
