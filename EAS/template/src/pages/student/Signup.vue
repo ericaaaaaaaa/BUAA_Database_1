@@ -93,10 +93,37 @@ export default {
 
   methods :{
     onClick:function () {
-      if (this.studentId == 12345) {
-        this.$router.push('/student/homepage');
-        // window.open('http://localhost:8080/#/student/homepage');
-      }
+      // if (this.studentId == 12345) {
+      //   this.$router.push('/student/homepage');
+      //   // window.open('http://localhost:8080/#/student/homepage');
+      // }
+      axios({
+        method: 'post',
+        url: 'http://localhost:8000/student/register/',
+        params: {
+            "studentId": this.studentId.toString,
+            "studentPwd": this.studentPwd
+        }
+      }).then(function (response) {
+          // handle success
+          this.$q.notify({
+            type: 'positive',
+            message: '注册成功！'
+          })
+          this.$router.push('/student/login/');
+          console.log(response);
+        })
+        .catch(function (error) {
+          // handle error
+          this.$q.notify({
+            type: 'negative',
+            message: '请输入符合格式的用户名 / 密码'
+          })
+          console.log(error);
+        })
+        .then(function () {
+          // always executed
+        });
     },
     back:function() {
       this.$router.push('/')

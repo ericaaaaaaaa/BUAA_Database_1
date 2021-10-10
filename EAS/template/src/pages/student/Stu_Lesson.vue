@@ -22,11 +22,11 @@
               class="my-sticky-header-table"
               :rows="rows_selected"
               :columns="columns"
-              row-key="name"
+              row-key="id"
               :filter="filter"
               :loading="loading"
               v-model:selected="selected"
-              selection="multiple"
+              selection="single"
             >
             <template v-slot:top-left>
               <q-input bg-color="white" filled borderless dense debounce="300" v-model="filter" placeholder="查询课程">
@@ -53,7 +53,7 @@
               class="my-sticky-header-table"
               :rows="rows_unselected"
               :columns="columns"
-              row-key="name"
+              row-key="id"
               :filter="filter_1"
               :loading="loading_1"
               v-model:selected="unselected"
@@ -157,7 +157,37 @@ export default({
     const filter = ref('')
     const loading_1 = ref(false)
     const filter_1 = ref(''),
-    rows_selected = [],
+    rows_selected = [
+  {
+    name: '离散数学',
+    capacity: 57,
+    id: 1,
+    teacher: '马殿富'
+  },
+  {
+    name: '基物实验',
+    capacity: 1000,
+    id: 4,
+    teacher: '王文玲'
+  },
+  {
+    name: '操作系统',
+    capacity: 75,
+    id: 2,
+    teacher: '王雷'
+  },
+  {
+    name: '形式语言与自动机',
+    capacity: 50,
+    id: 6,
+    teacher: '胡春明'
+  },
+  {
+    name: '高等代数',
+    capacity: 85,
+    id: 7,
+    teacher: '孙晓伟'
+  }],
     rows_unselected = []
 
     return {
@@ -165,13 +195,19 @@ export default({
       loading,
       filter_1,
       loading_1,
-      selected: ref([]),
-      unselected: ref([]),
+      // selected: ref([]),
+      // unselected: ref([]),
+      selected: [],
+      unselected: [],
       columns,
       rows_selected,
       rows_unselected,
       tab: ref('selected_course'),
     }
+  },
+
+  created() {
+    this.checkSelectedCourse()
   },
 
   methods:{
@@ -184,9 +220,27 @@ export default({
       }).onOk(() => {
         let self = this;
         this.selected.filter(function(item){
-          // self.rows_unselected.push(self.rows_selected[0]);
-          self.rows_unselected.push(self.rows_selected[self.rows_selected.indexOf(item)]);
-          self.rows_selected.splice(self.rows_selected.indexOf(item), 1);
+          // self.rows_unselected.push(self.rows_selected[self.rows_selected.indexOf(item)]);
+          // self.rows_selected.splice(self.rows_selected.indexOf(item), 1);
+          console.log("here comes...")
+          console.log(JSON.stringify(this.selected));
+          console.log("and its done");
+          axios.post('http://localhost:8000/student/lesson/', {
+            userId: "2333",
+            operation: "select"
+          }).then(function (response) {
+              // handle success
+              this.rows_selected = response.data;
+              console.log(response);
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            })
+            .then(function () {
+              // always executed
+            });
+          checkSelectedCourse();
           return item;
         });
         this.selected = [];
@@ -203,7 +257,6 @@ export default({
       }).onOk(() => {
         let self = this;
         this.unselected.filter(function(item){
-          // self.rows_selected.push(self.rows_unselected[0]);
           self.rows_selected.push(self.rows_unselected[self.rows_unselected.indexOf(item)]);
           self.rows_unselected.splice(self.rows_unselected.indexOf(item), 1);
           return item;
@@ -217,9 +270,9 @@ export default({
         method: 'get',
         url: 'http://localhost:8000/student/lesson/',
         params: {
-            "userId": "2333",
-            "searchText": "",
-            "operation": "selected"
+            userId: "2333",
+            searchText: "",
+            operation: "selected"
         }
       }).then(function (response) {
           // handle success
@@ -237,9 +290,9 @@ export default({
     checkUnselectedCourse(){
       axios.get('http://localhost:8000/student/lesson/', {
         params: {
-            "userId": "2333",
-            "searchText": "",
-            "operation": "unselected"
+            userId: "2333",
+            searchText: "",
+            operation: "unselected"
         }
       }).then(function (response) {
           // handle success
