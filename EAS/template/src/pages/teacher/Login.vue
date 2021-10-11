@@ -94,40 +94,39 @@ export default {
 
   methods :{
     onClick:function() {
-      this.$router.push('/teacher/lesson/' + this.teacherId)
-//       let _this = this
-//       axios({
-//         method: 'GET',
-//         url: 'http://localhost:8000/teacher/login/',
-//         params: {
-//             "teacherId": this.teacherId,
-//             "teacherPwd": this.teacherPwd
-//         }
-//       }).then(function (response) {
-//         console.log(response);
-//           if (!response.data.status) {
-//             _this.$router.push('/teacher/lesson/' + _this.teacherId);
-//             console.log(response);
-//           }
-//           else {
-//             _this.$q.notify({
-//             type: 'negative',
-//             message: '请输入正确的用户名 / 密码'
-//           })
-//           }
+      let _this = this
+      axios({
+        method: 'GET',
+        url: 'http://localhost:8000/teacher/login/',
+        params: {
+            "teacherId": this.teacherId,
+            "teacherPwd": this.teacherPwd
+        }
+      }).then(function (response) {
+        console.log(response);
+          if (!response.data.status) {
+            _this.$router.push('/teacher/lesson/' + _this.teacherId);
+            console.log(response);
+          }
+          else {
+            _this.$q.notify({
+            type: 'negative',
+            message: '请输入正确的用户名 / 密码'
+          })
+          }
           
-//         })
-//         .catch(function (error) {
-//           // handle error
-//             _this.$q.notify({
-//             type: 'negative',
-//             message: '请输入正确的用户名 / 密码'
-//           })
-//           console.log(error);
-//         })
-//         .then(function () {
-//           // always executed
-//         });
+        })
+        .catch(function (error) {
+          // handle error
+            _this.$q.notify({
+            type: 'negative',
+            message: '请输入正确的用户名 / 密码'
+          })
+          console.log(error);
+        })
+        .then(function () {
+          // always executed
+        });
     },
     back:function() {
       this.$router.push('/')
