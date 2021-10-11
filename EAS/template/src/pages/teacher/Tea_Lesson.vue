@@ -81,6 +81,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios';
 
+var tasks = [];
 export default {
   data () {
     var teacherId = this.$route.params.teacherId
@@ -108,6 +109,11 @@ export default {
       teacherId
     }
   },
+
+  created() {
+    this.init()
+  },
+
   methods: {
     deleteTask(index) {
       let _this = this
@@ -164,6 +170,26 @@ export default {
         this.newSum = ''
       }
       
+    },
+    init() {
+      let _this = this
+      axios({
+        method: 'GET',
+        url: 'http://localhost:8000/teacher/lesson/',
+        params: {
+          "userId": this.teacherId,
+          "operation": "getClass"
+        }
+      }).then(function (response) {
+        _this.tasks = response.data.courseTable;
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+      .then(function () {
+
+      });
+      console.log("success!");
     },
     onSubmit () {
       if (this.newClass !== '' && this.newSum !== '') {

@@ -124,7 +124,7 @@ export default {
       let _this = this
       axios({
         method: 'GET',
-        url: 'http://localhost:8000/teacher/settings/',
+        url: 'http://localhost:8000/student/settings/',
         params: {
             "studentId": this.studentId,
             "studentPwd": this.studentPwd,
