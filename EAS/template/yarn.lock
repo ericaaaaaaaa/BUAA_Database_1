@@ -5360,10 +5360,10 @@ qs@6.7.0:
   resolved "https://registry.nlark.com/qs/download/qs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
   integrity sha1-QdwaAV49WB8WIXdr4xr7KHapsbw=
 
-quasar@^2.0.0:
-  version "2.1.0"
-  resolved "https://registry.nlark.com/quasar/download/quasar-2.1.0.tgz#c5524257f575c74297332a24b5004503787681fa"
-  integrity sha1-xVJCV/V1x0KXMyoktQBFA3h2gfo=
+quasar@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.npmmirror.com/quasar/download/quasar-2.1.1.tgz#1c6617d6e8c02aad3e0239eb0887ec39fe891696"
+  integrity sha1-HGYX1ujAKq0+AjnrCIfsOf6JFpY=
 
 querystring@0.2.0:
   version "0.2.0"
@@ -6623,6 +6623,11 @@ yaml@^1.10.0, yaml@^1.10.2, yaml@^1.7.2:
   version "1.10.2"
   resolved "https://registry.nlark.com/yaml/download/yaml-1.10.2.tgz#2301c5ffbf12b467de8da2333a459e29e7920e4b"
   integrity sha1-IwHF/78StGfejaIzOkWeKeeSDks=
+
+yarn@^1.22.15:
+  version "1.22.15"
+  resolved "https://registry.npmmirror.com/yarn/download/yarn-1.22.15.tgz#3431d5f134d3c752a57a9dd7f5e1167627ca3cc3"
+  integrity sha1-NDHV8TTTx1Klep3X9eEWdifKPMM=
 
 yocto-queue@^0.1.0:
   version "0.1.0"

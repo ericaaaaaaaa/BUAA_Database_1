@@ -15,17 +15,25 @@
           教务系统
         </q-toolbar-title>
 
-        <div>
-          退出
-        </div>
 
         <div>
           <q-btn
           flat
-          dense
-          round
+          align="around"
+          label = "设置"
+          icon="lightbulb_outline"
+          @click="setting"
+        />
+        </div>
+
+      
+
+        <div>
+          <q-btn
+          label = "退出"
+          flat
+          align="around"
           icon="logout"
-          aria-label="Menu"
           @click="logout"
         />
         </div>
@@ -67,6 +75,9 @@ export default defineComponent({
   methods: {
     logout:function() {
       this.$router.push('/')
+    },
+    setting:function() {
+      this.$router.push('/teacher/settings')
     }
   }
 })

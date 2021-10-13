@@ -107,7 +107,7 @@ export default {
         }
       })
       .then(response => {
-        this.$router.push('/teacher/homepage');
+        this.$router.push('/teacher/lesson/' + this.teacherId);
         console.log(response)
       }, error=> {
         console.log('错误', error.message)
